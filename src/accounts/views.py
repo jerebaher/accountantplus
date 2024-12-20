@@ -7,6 +7,4 @@ def accounts_balance_data(request):
         "labels": [accounts.name for accounts in accounts],
         "values": [accounts.balance for accounts in accounts],
     }
-    print(accounts)
-    print(data)
     return JsonResponse(data)
