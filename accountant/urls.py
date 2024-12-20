@@ -18,11 +18,13 @@ from django.contrib import admin
 from django.urls import path
 from src.accounts.views import accounts_balance_data
 from src.transactions.views import expense_flow_data
+from src.categories.views import add_category
 from src.home.views import home_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/accounts/balance/', accounts_balance_data, name='accounts_balance_data'),
     path('api/transactions/expenses/', expense_flow_data, name='expense_flow_data'),
+    path('api/categories/', add_category, name='add_category'),
     path('', home_view, name='home'),
 ]

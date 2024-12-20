@@ -8,6 +8,7 @@
         <title>Accountant Plus - Expense Manager</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js "></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="{% static 'js/charts.js' %}"></script>
         <script src="{% static 'js/index.js' %}"></script>
         <link rel="stylesheet" href="{% static 'css/index.css' %}">
@@ -32,15 +33,13 @@
                     </div>
 
                     <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-                        <!-- Transaction Form -->
                         <div class="bg-white shadow-md rounded-lg p-6">
-                            <h4 class="text-xl font-semibold mb-4">Registrar Transacción</h4>
+                            <h4 class="text-xl font-semibold mb-4">Nueva transacción</h4>
                             {% include "transaction_form.html" %}
                         </div>
 
-                        <!-- Account Form -->
                         <div class="bg-white shadow-md rounded-lg p-6">
-                            <h4 class="text-xl font-semibold mb-4">Registrar Cuenta</h4>
+                            <h4 class="text-xl font-semibold mb-4">Nueva cuenta</h4>
                             {% include "account_form.html" %}
                         </div>
                     </div>

@@ -56,3 +56,49 @@ document.addEventListener('DOMContentLoaded', function () {
         e.stopPropagation();
     });
 });
+
+function openCategoryModal() {
+    document.getElementById('categoryModal').classList.remove('hidden');
+}
+
+function closeCategoryModal() {
+    document.getElementById('categoryModal').classList.add('hidden');
+}
+
+function submitCategory() {
+    const name = document.getElementById('category_name').value;
+    const description = document.getElementById('category_description').value;
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    axios.post('/api/categories/',
+        {
+            name: name,
+            description: description
+        },
+        {
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }
+    )
+        .then(response => {
+            if (response.status === 201) {
+                alert('Categoría añadida con éxito.');
+                window.location.reload();
+            } else {
+                alert('Hubo un problema: ' + response.data.error);
+            }
+        })
+        .catch(error => {
+            if (error.response) {
+                console.error('Error en respuesta:', error.response.data);
+                alert('Error: ' + error.response.data.error || 'Ocurrió un problema al agregar la categoría.');
+            } else {
+                console.error('Error:', error);
+                alert('Error desconocido: ' + error.message);
+            }
+        });
+    closeCategoryModal();
+}
