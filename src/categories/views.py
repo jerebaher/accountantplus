@@ -18,6 +18,6 @@ def add_category(request):
             return JsonResponse({"message": "Categoría creada exitosamente."}, status=201)
 
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse({"error": str(e)}, status=400)
 
     return JsonResponse({"error": "Método no permitido."}, status=405)

@@ -1,3 +1,7 @@
+const ARRAY_TYPE = 'array';
+const NUMBER_TYPE = 'number';
+const STRING_TYPE = 'string';
+
 document.addEventListener('DOMContentLoaded', function () {
     const sidebarContainer = document.getElementById('sidebar-container');
     const sidebar = document.getElementById('sidebar');
@@ -65,40 +69,97 @@ function closeCategoryModal() {
     document.getElementById('categoryModal').classList.add('hidden');
 }
 
-function submitCategory() {
-    const name = document.getElementById('category_name').value;
-    const description = document.getElementById('category_description').value;
+const submitCategory = () => {
+    let tags = [
+        {"propertyName": "name", "type": STRING_TYPE, "tagName": "category_name"},
+        {"propertyName": "description", "type": STRING_TYPE, "tagName": "category_description"}
+    ]
+    let payload = getPayload(tags)
+
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    let headers = {
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }
+
+    submitForm('/api/categories/', payload, headers)
+    closeCategoryModal();
+}
+
+const getPayload = (tags) => {
+    let payload = {};
+
+    for (let tag in tags) {
+        let value = null;
+        let tagType = tags[tag]["type"];
+        let tagName = tags[tag]["tagName"];
+        let property = tags[tag]["propertyName"];
+
+        if (tagType === ARRAY_TYPE) {
+            const options = document.getElementById(tagName)?.selectedOptions;
+            value = options ? Array.from(options).map(option => option.value) : [];
+        }
+        else if (tagType === NUMBER_TYPE) {
+            const rawValue = document.getElementById(tagName)?.value;
+            value = parseFloat(rawValue);
+            if (isNaN(value) || value <= 0) {
+                alert('El importe debe ser mayor a 0.');
+            }
+        }
+        else if (tagType === STRING_TYPE) {
+            value = document.getElementById(tagName)?.value || '';
+        }
+
+        payload[property] = value;
+    }
+
+    return payload;
+}
+
+const submitTransaction = () => {
+    let tags = [
+        {"propertyName": "name", "type": STRING_TYPE, "tagName": "transaction_name"},
+        {"propertyName": "amount", "type": NUMBER_TYPE, "tagName": "transaction_amount"},
+        {"propertyName": "categories_id", "type": ARRAY_TYPE, "tagName": "transaction_category"},
+        {"propertyName": "description", "type": STRING_TYPE, "tagName": "transaction_description"},
+        {"propertyName": "account_id", "type": STRING_TYPE, "tagName": "transaction_account"},
+        {"propertyName": "transaction_type", "type": STRING_TYPE, "tagName": "transaction_type"},
+        {"propertyName": "date", "type": STRING_TYPE, "tagName": "transaction_date"},
+    ]
+    let payload = getPayload(tags)
+
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-    axios.post('/api/categories/',
-        {
-            name: name,
-            description: description
+    let headers = {
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json'
         },
-        {
-            headers: {
-                'X-CSRFToken': csrfToken,
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true
-        }
-    )
-        .then(response => {
-            if (response.status === 201) {
-                alert('Categoría añadida con éxito.');
+        withCredentials: true
+    }
+    submitForm('/api/transactions/', payload, headers)
+}
+
+const submitForm = (url, payload, headers) => {
+    return axios.post(url, payload, headers)
+        .then((res) => {
+            if (res.status === 201) {
+                alert('Solicitud enviada');
                 window.location.reload();
             } else {
-                alert('Hubo un problema: ' + response.data.error);
+                alert('Hubo un problema: ' + res.data.error);
             }
         })
-        .catch(error => {
-            if (error.response) {
-                console.error('Error en respuesta:', error.response.data);
-                alert('Error: ' + error.response.data.error || 'Ocurrió un problema al agregar la categoría.');
+        .catch((err) => {
+            if (err.response) {
+                console.error('Error en respuesta:', err.response.data);
+                alert('Error: ' + err.response.data.error || 'Ocurrió un problema en la solicitud.');
             } else {
-                console.error('Error:', error);
-                alert('Error desconocido: ' + error.message);
+                console.error('Error:', err);
+                alert('Error desconocido: ' + err.message);
             }
         });
-    closeCategoryModal();
 }
