@@ -47,11 +47,6 @@ document.addEventListener('DOMContentLoaded', async function renderAccountsBalan
         },
         options: {
             responsive: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
         }
     });
 });
