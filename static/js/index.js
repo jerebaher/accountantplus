@@ -1,6 +1,10 @@
 const ARRAY_TYPE = 'array';
 const NUMBER_TYPE = 'number';
 const STRING_TYPE = 'string';
+const BASE_URL = 'http://127.0.0.1:8000/api/';
+let axiosInstance;
+
+document.addEventListener('DOMContentLoaded', () => createAxiosInstance())
 
 document.addEventListener('DOMContentLoaded', function () {
     const sidebarContainer = document.getElementById('sidebar-container');
@@ -69,23 +73,24 @@ function closeCategoryModal() {
     document.getElementById('categoryModal').classList.add('hidden');
 }
 
+const createAxiosInstance = () => {
+    axiosInstance = axios.create({
+        baseURL: BASE_URL, headers: {
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+            'Content-Type': 'application/json'
+        }, timeout: 1000, withCredentials: true
+    });
+}
+
 const submitCategory = () => {
-    let tags = [
-        {"propertyName": "name", "type": STRING_TYPE, "tagName": "category_name"},
-        {"propertyName": "description", "type": STRING_TYPE, "tagName": "category_description"}
-    ]
+    let tags = [{
+        "propertyName": "name",
+        "type": STRING_TYPE,
+        "tagName": "category_name"
+    }, {"propertyName": "description", "type": STRING_TYPE, "tagName": "category_description"}]
     let payload = getPayload(tags)
 
-    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-    let headers = {
-        headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/json'
-        },
-        withCredentials: true
-    }
-
-    submitForm('/api/categories/', payload, headers)
+    submitForm(BASE_URL + 'categories/', payload)
     closeCategoryModal();
 }
 
@@ -101,15 +106,13 @@ const getPayload = (tags) => {
         if (tagType === ARRAY_TYPE) {
             const options = document.getElementById(tagName)?.selectedOptions;
             value = options ? Array.from(options).map(option => option.value) : [];
-        }
-        else if (tagType === NUMBER_TYPE) {
+        } else if (tagType === NUMBER_TYPE) {
             const rawValue = document.getElementById(tagName)?.value;
             value = parseFloat(rawValue);
             if (isNaN(value) || value <= 0) {
                 alert('El importe debe ser mayor a 0.');
             }
-        }
-        else if (tagType === STRING_TYPE) {
+        } else if (tagType === STRING_TYPE) {
             value = document.getElementById(tagName)?.value || '';
         }
 
@@ -120,35 +123,53 @@ const getPayload = (tags) => {
 }
 
 const submitTransaction = () => {
-    let tags = [
-        {"propertyName": "name", "type": STRING_TYPE, "tagName": "transaction_name"},
-        {"propertyName": "amount", "type": NUMBER_TYPE, "tagName": "transaction_amount"},
-        {"propertyName": "categories_id", "type": ARRAY_TYPE, "tagName": "transaction_category"},
-        {"propertyName": "description", "type": STRING_TYPE, "tagName": "transaction_description"},
-        {"propertyName": "account_id", "type": STRING_TYPE, "tagName": "transaction_account"},
-        {"propertyName": "transaction_type", "type": STRING_TYPE, "tagName": "transaction_type"},
-        {"propertyName": "date", "type": STRING_TYPE, "tagName": "transaction_date"},
-    ]
+    let tags = [{"propertyName": "name", "type": STRING_TYPE, "tagName": "transaction_name"}, {
+        "propertyName": "amount",
+        "type": NUMBER_TYPE,
+        "tagName": "transaction_amount"
+    }, {
+        "propertyName": "categories_id",
+        "type": ARRAY_TYPE,
+        "tagName": "transaction_category"
+    }, {
+        "propertyName": "description",
+        "type": STRING_TYPE,
+        "tagName": "transaction_description"
+    }, {
+        "propertyName": "account_id",
+        "type": STRING_TYPE,
+        "tagName": "transaction_account"
+    }, {
+        "propertyName": "transaction_type",
+        "type": STRING_TYPE,
+        "tagName": "transaction_type"
+    }, {"propertyName": "date", "type": STRING_TYPE, "tagName": "transaction_date"},]
     let payload = getPayload(tags)
 
-    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-
-    let headers = {
-        headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/json'
-        },
-        withCredentials: true
-    }
-    submitForm('/api/transactions/', payload, headers)
+    submitForm(BASE_URL + 'transactions/', payload)
 }
 
-const submitForm = (url, payload, headers) => {
-    return axios.post(url, payload, headers)
+const submitAccount = () => {
+    let tags = [{
+        "propertyName": "name",
+        "type": STRING_TYPE,
+        "tagName": "account_name"
+    }, {"propertyName": "account_type", "type": STRING_TYPE, "tagName": "account_type"}, {
+        "propertyName": "balance",
+        "type": NUMBER_TYPE,
+        "tagName": "account_balance"
+    }, {"propertyName": "description", "type": STRING_TYPE, "tagName": "account_description"} // Nuevo campo
+    ];
+    let payload = getPayload(tags);
+
+    submitForm('accounts/', payload);
+}
+
+const submitForm = (url, payload) => {
+    return axiosInstance.post(url, payload)
         .then((res) => {
             if (res.status === 201) {
                 alert('Solicitud enviada');
-                window.location.reload();
             } else {
                 alert('Hubo un problema: ' + res.data.error);
             }
