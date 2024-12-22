@@ -3,18 +3,30 @@
     <div>
         <label for="transaction_name" class="block text-sm font-medium text-gray-700">Nombre</label>
         <input type="text" name="name" id="transaction_name"
+               placeholder="Nombre de la transacción"
+               maxlength="20"
                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        required>
+               required>
     </div>
     <div>
         <label for="transaction_description" class="block text-sm font-medium text-gray-700">Descripción</label>
         <textarea name="description" id="transaction_description" rows="3"
+                  maxlength="50"
+                  placeholder="Descripción de la transacción"
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
     </div>
     <div>
         <label for="transaction_date" class="block text-sm font-medium text-gray-700">Fecha</label>
-        <input type="date" name="date" id="transaction_date"
-               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+        <div class="flex items-center space-x-2">
+            <div class="flex w-full">
+                <input type="datetime-local" name="date" id="transaction_date"
+                       class="mt-1 flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <button type="button" id="set-current-datetime"
+                        class="ml-2 px-2 py-1 text-xs border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Ahora
+                </button>
+            </div>
+        </div>
     </div>
     <label for="transaction_account" class="block text-sm font-medium text-gray-700">Cuenta</label>
     <select name="account" id="transaction_account"
@@ -34,6 +46,7 @@
     <div>
         <label for="transaction_amount" class="block text-sm font-medium text-gray-700">Monto</label>
         <input type="number" name="amount" id="transaction_amount" min="0"
+               placeholder="1000.00"
                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                required>
     </div>

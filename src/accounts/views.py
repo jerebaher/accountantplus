@@ -25,11 +25,6 @@ def create_account(request):
             if not name or not account_type or balance is None:
                 return JsonResponse({"error": "Faltan datos obligatorios"}, status=400)
 
-            try:
-                balance = float(balance)
-            except ValueError:
-                return JsonResponse({"error": "El saldo inicial debe ser un número válido"}, status=400)
-
             account = Account.objects.create(
                 name            = name,
                 account_type    = account_type,

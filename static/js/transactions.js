@@ -50,3 +50,10 @@ export const initializeCategorySelect = () => {
         }
     });
 };
+
+export const initializeDatetimeInput =  () => {
+    const datetimeInput = document.getElementById("transaction_date");
+
+    const now = new Date();
+    datetimeInput.value = now.toISOString().slice(0, 16);
+}

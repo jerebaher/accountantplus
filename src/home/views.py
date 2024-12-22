@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.shortcuts import render
 
 from src.categories.models import Category
@@ -14,7 +16,7 @@ def home_view(request, *args, **kwargs):
     context = {
         "categories": Category.objects.all(),
         "accounts": Account.objects.filter(user=request.user),
-        "account_types": account_types
+        "account_types": account_types,
     }
 
     return render(request, 'index.html', context)

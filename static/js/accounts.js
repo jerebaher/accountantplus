@@ -1,5 +1,5 @@
-import {getPayload} from './payload.js';
-import {submitForm} from './forms.js';
+import { getPayload } from './payload.js';
+import { submitForm } from './forms.js';
 
 export const submitAccount = (axiosInstance) => {
     const tags = [
