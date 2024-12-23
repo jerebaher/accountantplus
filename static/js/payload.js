@@ -15,7 +15,7 @@ export const getPayload = (tags) => {
         } else if (tagType === NUMBER_TYPE) {
             const rawValue = document.getElementById(tagName)?.value;
             value = parseFloat(rawValue);
-            if (isNaN(value) || value <= 0) {
+            if (isNaN(value) || value < 0) {
                 alert('El importe debe ser mayor a 0.');
             }
         } else if (tagType === STRING_TYPE) {
