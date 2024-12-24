@@ -20,6 +20,7 @@ from src.accounts.views import accounts_balance_data, create_account
 from src.transactions.views import expense_flow_data, create_transaction
 from src.categories.views import add_category
 from src.home.views import home_view
+from src.home.views import transactions_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('api/accounts/', create_account, name='create_account'),
     path('api/categories/', add_category, name='add_category'),
     path('', home_view, name='home'),
+    path('transactions/', transactions_view, name='transactions'),
 ]
