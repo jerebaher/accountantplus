@@ -6,6 +6,7 @@ from src.categories.models import Category
 from src.accounts.models import Account
 from src.transactions.models import Transaction
 
+
 def home_view(request, *args, **kwargs):
     account_types = [
         {"id": "checking", "name": "Cuenta corriente"},
@@ -22,16 +23,15 @@ def home_view(request, *args, **kwargs):
 
     return render(request, 'index.html', context)
 
+
 def transactions_view(request, *args, **kwargs):
     transactions = (Transaction.objects
                     .filter(account__user=request.user)
+                    .prefetch_related('categories')
                     .order_by('-creation_date'))
-
-    transaction_categories = transactions.values_list('categories', flat=True)
 
     context = {
         "transactions": transactions,
-        "categories": transaction_categories,
     }
 
     return render(request, 'transaction_page.html', context)

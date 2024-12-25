@@ -1,7 +1,7 @@
 import {getPayload} from './payload.js';
 import {submitForm} from './forms.js';
 
-export const submitTransaction = (axiosInstance) => {
+export const submitTransaction = () => {
     const tags = [
         {"propertyName": "name", "type": "string", "tagName": "transaction_name"},
         {"propertyName": "amount", "type": "number", "tagName": "transaction_amount"},
@@ -13,7 +13,7 @@ export const submitTransaction = (axiosInstance) => {
     ];
     const payload = getPayload(tags);
 
-    submitForm(axiosInstance, 'transactions/', payload)
+    submitForm('transactions/', payload)
         .then((res) => {
             if (res.status === 201) {
                 alert('Transacción creada exitosamente');
@@ -51,9 +51,49 @@ export const initializeCategorySelect = () => {
     });
 };
 
-export const initializeDatetimeInput =  () => {
+export const initializeDatetimeInput = () => {
     const datetimeInput = document.getElementById("transaction_date");
 
     const now = new Date();
     datetimeInput.value = now.toISOString().slice(0, 16);
 }
+
+export const initializeRemoveCategory = () => {
+    const transactionsBody = document.getElementById('transactions-body');
+
+    if (!transactionsBody) {
+        console.warn("El elemento con ID 'transactions-body' no se encontró en el DOM.");
+        return;
+    }
+
+    transactionsBody.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON' && e.target.closest('.category-tag')) {
+            const categoryTag = e.target.closest('.category-tag');
+
+            const transactionId = categoryTag.getAttribute('data-transaction-id');
+            const categoryId = categoryTag.getAttribute('data-category-id');
+
+            if (!transactionId || !categoryId) {
+                alert('No se pudo identificar la transacción o categoría.');
+                return;
+            }
+
+            if (!confirm('¿Estás seguro de eliminar esta categoría de la transacción?')) {
+                return;
+            }
+
+            submitForm('transactions/remove_category/', {
+                transaction_id: transactionId,
+                category_id: categoryId,
+            })
+                .then((response) => {
+                    alert('Categoría eliminada con éxito.');
+                    categoryTag.remove(); // Remover el tag del DOM
+                })
+                .catch((error) => {
+                    console.error('Error al eliminar la categoría:', error.response?.data || error.message);
+                    alert('Hubo un problema al intentar eliminar la categoría.');
+                });
+        }
+    });
+};

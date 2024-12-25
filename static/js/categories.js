@@ -1,14 +1,14 @@
 import {getPayload} from './payload.js';
 import {submitForm} from './forms.js';
 
-export const submitCategory = (axiosInstance) => {
+export const submitCategory = () => {
     const tags = [
         {"propertyName": "name", "type": "string", "tagName": "category_name"},
         {"propertyName": "description", "type": "string", "tagName": "category_description"}
     ];
     const payload = getPayload(tags);
 
-    submitForm(axiosInstance, 'categories/', payload)
+    submitForm('categories/', payload)
         .then((res) => {
             if (res.status === 201) {
                 alert('Categoría creada exitosamente');

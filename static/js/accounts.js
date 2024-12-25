@@ -1,7 +1,7 @@
 import { getPayload } from './payload.js';
 import { submitForm } from './forms.js';
 
-export const submitAccount = (axiosInstance) => {
+export const submitAccount = () => {
     const tags = [
         {"propertyName": "name", "type": "string", "tagName": "account_name"},
         {"propertyName": "account_type", "type": "string", "tagName": "account_type"},
@@ -10,7 +10,7 @@ export const submitAccount = (axiosInstance) => {
     ];
     const payload = getPayload(tags);
 
-    submitForm(axiosInstance, 'accounts/', payload)
+    submitForm('accounts/', payload)
         .then((res) => {
             if (res.status === 201) {
                 alert('Cuenta creada exitosamente');

@@ -12,14 +12,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module" src="{% static  'js/main.js' %}"></script>
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
-    {% include 'header.html' %}
-    {% include 'sidebar.html' %}
     {% block head %}
         <title>Title placeholder</title>
     {% endblock %}
 </head>
 <body>
 <main id="main-content" class="flex flex-col bg-gray-50">
+    {% include 'header.html' %}
+    {% include 'sidebar.html' %}
     {% block mainContent %}
         replace me from base.html
     {% endblock %}

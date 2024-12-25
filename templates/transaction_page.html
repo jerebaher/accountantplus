@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,6 +7,7 @@
     {% block head %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script type="module" src="{% static 'js/transactions_page.js' %}"></script>
     {% endblock %}
 </head>
 <body class="bg-gray-100">
@@ -27,12 +29,11 @@
                         <option value="">All Categories</option>
                         <option value="income">Income</option>
                         <option value="expense">Expense</option>
-                        <!-- Add more categories as needed -->
                     </select>
                 </div>
                 <div class="flex items-end">
-                    <button id="apply-filters" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Apply
-                        Filters
+                    <button id="apply-filters" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Filtrar
                     </button>
                 </div>
             </div>
@@ -44,7 +45,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ]Description
+                        Description
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Category
@@ -63,8 +64,17 @@
                             {{ transaction.description }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {% for category in categories %}
-                            	{{ category.name }}
+                            {% for category in transaction.categories.all %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mr-2 category-tag"
+                                      data-category-id="{{ category.id }}"
+                                      data-transaction-id="{{ transaction.id }}">
+                                    {{ category.name }}
+                                    <button class="ml-2 text-gray-500 hover:text-red-700 focus:outline-none">
+                                        ✕
+                                    </button>
+                                </span>
+                            {% empty %}
+                                <span class="text-gray-400 italic">No categories</span>
                             {% endfor %}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
