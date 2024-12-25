@@ -42,26 +42,31 @@
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <table class="w-full">
                 <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Description
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Category
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount
-                    </th>
-                </tr>
+                    <tr>
+                        {% for column in column_names %}
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {{ column }}
+                            </th>
+                        {% endfor %}
+                    </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200" id="transactions-body">
                 {% for transaction in transactions %}
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ transaction.creation_date|date:"Y-m-d" }}
+                            {{ transaction.creation_date|date:"Y-m-d H:i" }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ transaction.name }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ transaction.description }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ transaction.transaction_type }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ transaction.account.name }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {% for category in transaction.categories.all %}
@@ -74,7 +79,7 @@
                                     </button>
                                 </span>
                             {% empty %}
-                                <span class="text-gray-400 italic">No categories</span>
+                                <span class="text-gray-400 italic">Sin categorías</span>
                             {% endfor %}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

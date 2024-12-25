@@ -25,13 +25,16 @@ def home_view(request, *args, **kwargs):
 
 
 def transactions_view(request, *args, **kwargs):
+    column_names = ("Fecha", "Nombre", "Descripción", "Tipo de transacción", "Cuenta", "Categorías", "Monto")
     transactions = (Transaction.objects
                     .filter(account__user=request.user)
                     .prefetch_related('categories')
+                    .prefetch_related('account')
                     .order_by('-creation_date'))
 
     context = {
         "transactions": transactions,
+        "column_names": column_names,
     }
 
     return render(request, 'transaction_page.html', context)
