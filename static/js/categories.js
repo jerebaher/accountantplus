@@ -26,11 +26,11 @@ export const submitCategory = () => {
 
 export const refreshCategorySelect = (newCategoryId = null) => {
     submitForm('categories/')
-        .then((data) => {
+        .then((response) => {
             const categorySelect = document.getElementById('transaction_category');
             categorySelect.innerHTML = "";
 
-            data.categories.forEach(category => {
+            response.data.categories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category.id;
                 option.textContent = category.name;
