@@ -11,8 +11,9 @@ export const submitCategory = () => {
     submitForm('categories/', 'POST', payload)
         .then((res) => {
             if (res.status === 201) {
+                console.log(res);
                 alert('Categoría creada exitosamente');
-                refreshCategorySelect();
+                refreshCategorySelect(res.data.body);
                 closeCategoryModal();
             } else {
                 alert('Hubo un problema: ' + res.data.error);
@@ -30,16 +31,21 @@ export const refreshCategorySelect = (newCategoryId = null) => {
             const categorySelect = document.getElementById('transaction_category');
             categorySelect.innerHTML = "";
 
+            if (response.data.categories === undefined) {
+                console.warn("Categorías no encontradas.")
+                return;
+            }
+
             response.data.categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.id;
-                option.textContent = category.name;
+                const optionElement = document.createElement('option');
+                optionElement.value = category.id;
+                optionElement.textContent = category.name;
 
                 if (newCategoryId && newCategoryId === category.id) {
-                    option.selected = true;
+                    optionElement.selected = true;
                 }
 
-                categorySelect.appendChild(option);
+                categorySelect.appendChild(optionElement);
             });
         })
         .catch(error => {

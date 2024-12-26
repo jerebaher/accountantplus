@@ -13,9 +13,9 @@ def add_category(request):
             if not name:
                 return JsonResponse({"error": "El campo nombre debe estar presente."}, status=400)
 
-            Category.objects.create(name=name, description=description)
+            category_id = Category.objects.create(name=name, description=description).id
 
-            return JsonResponse({"message": "Categoría creada exitosamente."}, status=201)
+            return JsonResponse({"message": "Categoría creada exitosamente.", "body": category_id}, status=201)
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
