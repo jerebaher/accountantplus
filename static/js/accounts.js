@@ -10,7 +10,7 @@ export const submitAccount = () => {
     ];
     const payload = getPayload(tags);
 
-    submitForm('accounts/', payload)
+    submitForm('accounts/', 'POST', payload)
         .then((res) => {
             if (res.status === 201) {
                 alert('Cuenta creada exitosamente');

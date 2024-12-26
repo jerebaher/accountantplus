@@ -9,35 +9,45 @@ const getCsrfToken = () => {
     return csrfInput ? csrfInput.value : null;
 };
 
-export const submitForm = (url, payload) => {
-    return AXIOS_INSTANCE.request({
-        url: url,
-        data: payload,
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': getCsrfToken(),
-        },
-        transformRequest: [
-            function (data) {
-                let regexNumberPattern = /^[0-9]+(\.[0-9]+)?$/;
+export const submitForm = (url, method = 'GET', payload = null) => {
+    try {
+        const options = {
+            url: url,
+            data: payload,
+            method: method,
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+            },
+        };
 
-                const transformToNumber = (obj) => {
-                    for (let key in obj) {
-                        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                            if (typeof obj[key] === 'string' && regexNumberPattern.test(obj[key])) {
-                                obj[key] = Number(obj[key]);
-                            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-                                transformToNumber(obj[key]);
-                            }
-                        }
-                    }
-                };
+        if (['POST', 'PUT', 'PATCH'].includes(options.method) && payload) {
+            options.data = transformPayload(payload);
+        }
 
-                let transformedData = {...data};
-                transformToNumber(transformedData);
-
-                return JSON.stringify(transformedData);
-            }
-        ]
-    });
+        return AXIOS_INSTANCE.request(options);
+    } catch (error) {
+        console.error('Error en submitForm:', error.message);
+        throw new Error('Error al enviar la solicitud.');
+    }
 };
+
+const transformPayload = (payload) => {
+    let regexNumberPattern = /^[0-9]+(\.[0-9]+)?$/;
+
+    const transformToNumber = (obj) => {
+        for (let key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                if (typeof obj[key] === 'string' && regexNumberPattern.test(obj[key])) {
+                    obj[key] = Number(obj[key]);
+                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    transformToNumber(obj[key]);
+                }
+            }
+        }
+    };
+
+    let transformedData = {...payload};
+    transformToNumber(transformedData);
+
+    return JSON.stringify(transformedData);
+}

@@ -20,4 +20,10 @@ def add_category(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
 
-    return JsonResponse({"error": "Método no permitido."}, status=405)
+    elif request.method == "GET":
+        categories = list(Category.objects.values('id', 'name'))
+
+        return JsonResponse({'categories': categories}, status=200)
+
+    else:
+        return JsonResponse({"error": "Método no permitido."}, status=405)

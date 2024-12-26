@@ -6,7 +6,7 @@ export const createAxiosInstance = () => {
         headers: {
             'Content-Type': 'application/json'
         },
-        timeout: 1000,
+        timeout: 6000,
         withCredentials: true
     });
 };

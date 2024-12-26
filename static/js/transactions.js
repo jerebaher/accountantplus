@@ -13,7 +13,7 @@ export const submitTransaction = () => {
     ];
     const payload = getPayload(tags);
 
-    submitForm('transactions/', payload)
+    submitForm('transactions/', 'POST', payload)
         .then((res) => {
             if (res.status === 201) {
                 alert('Transacción creada exitosamente');
